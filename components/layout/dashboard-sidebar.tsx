@@ -5,23 +5,47 @@ import { usePathname } from "next/navigation"
 import { logout } from "@/app/(auth)/actions"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Upload, FolderOpen, LogOut, TrendingUp, ChevronRight, Menu, X } from "lucide-react"
+import { Upload, FolderOpen, LogOut, TrendingUp, ChevronRight, Menu, X, BarChart3, Factory, Zap } from "lucide-react"
 import Image from "next/image"
 import logo from '@/assets/Logo_.png'
 import { useState } from "react"
 
 const navItems = [
   {
-    label: "Upload Data",
-    href: "/dashboard",
-    icon: Upload,
-    description: "Process new files",
+    label: "Executive Dashboard",
+    href: "/dashboard/executive",
+    icon: BarChart3,
+    description: "KPIs & insights",
   },
   {
-    label: "My Uploads",
+    label: "Sales Data Dashboard",
+    href: "/dashboard",
+    icon: Upload,
+    description: "Upload gross profits report",
+  },
+  {
+    label: "Sales Data Explorer",
     href: "/dashboard/uploads",
     icon: FolderOpen,
-    description: "View history",
+    description: "View uploaded reports",
+  },
+  {
+    label: "SKU Masters",
+    href: "/dashboard/skus",
+    icon: TrendingUp,
+    description: "Manage SKUs",
+  },
+  {
+    label: "Production",
+    href: "/dashboard/production",
+    icon: Factory,
+    description: "Forecast & records",
+  },
+  {
+    label: "Simulations",
+    href: "/dashboard/simulation",
+    icon: Zap,
+    description: "What-if analysis",
   },
 ]
 
@@ -54,7 +78,7 @@ export function DashboardSidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed top-0 left-0 z-40 flex h-screen w-64 sm:w-72 lg:w-60 shrink-0 flex-col bg-sidebar border-r border-sidebar-border transition-transform duration-300 md:relative md:translate-x-0",
+          "fixed top-0 left-0 z-40 flex h-screen w-100 sm:w-72 lg:w-70 shrink-0 flex-col bg-sidebar border-r border-sidebar-border transition-transform duration-300 md:relative md:translate-x-0",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
@@ -67,11 +91,6 @@ export function DashboardSidebar() {
             <span className="text-xs sm:text-sm font-semibold text-sidebar-foreground tracking-tight truncate">OPTIGAIN</span>
             <span className="text-[8px] sm:text-[10px] text-sidebar-foreground/40 uppercase tracking-widest font-medium hidden sm:block">Enterprise</span>
           </div>
-        </div>
-
-        {/* Nav section label */}
-        <div className="px-3 sm:px-5 pt-4 sm:pt-6 pb-2">
-          <span className="text-[8px] sm:text-[10px] uppercase tracking-widest font-semibold text-sidebar-foreground/30">Navigation</span>
         </div>
 
         {/* Nav items */}
@@ -100,9 +119,9 @@ export function DashboardSidebar() {
                   <item.icon className="h-3.5 sm:h-4 w-3.5 sm:w-4" />
                 </div>
                 <div className="flex flex-col flex-1 min-w-0">
-                  <span className="truncate">{item.label}</span>
+                  <span className="truncate text-xs sm:text-sm md:text-base lg:text-[10px] xl:text-[11px]">{item.label}</span>
                   <span className={cn(
-                    "text-[8px] sm:text-[10px] truncate",
+                    "truncate text-[8px] sm:text-[10px] md:text-xs lg:text-[10px] xl:text-[11px]",
                     isActive ? "text-sidebar-foreground/50" : "text-sidebar-foreground/30"
                   )}>{item.description}</span>
                 </div>
