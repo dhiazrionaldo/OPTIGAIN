@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from "recharts"
-import { AlertCircle, Trash2, Play, ArrowRight } from "lucide-react"
+import { AlertCircle, Trash2, Play, ArrowRight, Save } from "lucide-react"
 import type { RevenueForecast, RevenueSimulation } from "@/lib/database.types"
 
 export default function SimulationDashboard() {
@@ -211,7 +211,80 @@ export default function SimulationDashboard() {
                   disabled={simulating}
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4 items-end">
+              {/* BUNGKUS UTAMA HARUS RELATIVE */}
+              <div className="relative">
+                
+                {/* GRID 2 KOLOM MURNI (Tanpa elemen panah di dalamnya) */}
+                {/* Saya ubah gap-4 jadi gap-x-8 agar ada ruang bernapas untuk panah di tengah */}
+                <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                  
+                  {/* --- KOLOM KIRI --- */}
+                  <div className="space-y-4">
+                    <div>
+                      <Label>Product Family</Label>
+                      <Select value={adjustmentType} onValueChange={setAdjustmentType} disabled={simulating}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="price">DG</SelectItem>
+                          <SelectItem value="cost">FL</SelectItem>
+                          <SelectItem value="volume">1L</SelectItem>
+                          <SelectItem value="mixed">FK</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label>Original Product</Label>
+                      <Select value={adjustmentType} onValueChange={setAdjustmentType} disabled={simulating}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="price">DG 1 MM</SelectItem>
+                          <SelectItem value="cost">DG 3 MM</SelectItem>
+                          <SelectItem value="volume">DG 5 MM</SelectItem>
+                          <SelectItem value="mixed">DG 10 MM</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  
+                  {/* --- KOLOM KANAN --- */}
+                  <div className="space-y-4">
+                    <div>
+                      <Label>Product Family</Label>
+                      <Select value={adjustmentType} onValueChange={setAdjustmentType} disabled={simulating}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="price">DG</SelectItem>
+                          <SelectItem value="cost">FL</SelectItem>
+                          <SelectItem value="volume">1L</SelectItem>
+                          <SelectItem value="mixed">FK</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label>Substitution Product</Label>
+                      <Select value={adjustmentType} onValueChange={setAdjustmentType} disabled={simulating}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="price">DG 1 MM</SelectItem>
+                          <SelectItem value="cost">DG 3 MM</SelectItem>
+                          <SelectItem value="volume">DG 5 MM</SelectItem>
+                          <SelectItem value="mixed">DG 10 MM</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* --- PANAH DI DEAD CENTER --- */}
+                <div className="absolute top-1/3 left-1/3 -translate-x-1/3 -translate-y-1/3 flex items-center justify-center pointer-events-none bg-card p-1 rounded-full">
+                  <ArrowRight className="h-10 w-10 text-muted-foreground/100" />
+                </div>
+                
+              </div>
+              {/* <div className="grid grid-cols-2 gap-4 items-end">
                 <div className="space-y-3">
                   <div>
                     <Label htmlFor="adjustment">Product Family</Label>
@@ -243,8 +316,8 @@ export default function SimulationDashboard() {
                     </Select>
                   </div>
                 </div>
-                {/* ARROW */}
-                <div className="absolute left-1/2 -translate-x-1/2 flex items-end pb-2">
+                
+                <div className="relative left-1/2 -translate-x-1/2 flex items-end pb-2">
                   <ArrowRight className="w-6 h-6 text-muted-foreground" />
                 </div>
                 
@@ -279,38 +352,18 @@ export default function SimulationDashboard() {
                     </Select>
                   </div>
                 </div>
-              </div>
+              </div> */}
+              
 
-              <div>
-                <Label htmlFor="value">Adjustment Value (%)</Label>
-                <Input
-                  id="value"
-                  type="number"
-                  placeholder="e.g., 10"
-                  step="0.1"
-                  value={adjustmentValue}
-                  onChange={(e) => setAdjustmentValue(e.target.value)}
-                  disabled={simulating}
-                />
-              </div>
+              
 
               <Button type="submit" disabled={simulating || !baseline} className="w-full">
                 {simulating ? "Running..." : <>
-                  <Play className="mr-2 h-4 w-4" />
-                  Run Simulation
+                  <Save className="mr-2 h-4 w-4" />
+                  Save
                 </>}
               </Button>
             </form>
-
-            {baseline && (
-              <div className="mt-6 space-y-2 border-t pt-6">
-                <h4 className="text-sm font-semibold">Baseline Forecast</h4>
-                <div className="text-2xl font-bold">${baseline.predicted_revenue.toLocaleString("en-US", { maximumFractionDigits: 0 })}</div>
-                <p className="text-xs text-gray-500">Forecasted revenue</p>
-                <div className="mt-2 text-xl font-semibold text-green-600">{baseline.predicted_margin.toFixed(2)}</div>
-                <p className="text-xs text-gray-500">Gross margin</p>
-              </div>
-            )}
           </CardContent>
         </Card>
 

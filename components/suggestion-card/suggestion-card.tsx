@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { TrendingDown, TrendingUp, AlertCircle, CheckCircle2, ArrowRight, Lightbulb, Sparkles } from "lucide-react"
+import { TrendingDown, TrendingUp, AlertCircle, CheckCircle2, ArrowRight, Lightbulb, Sparkles, MountainSnow, CircleDollarSign } from "lucide-react"
 
 export interface CustomerStrategy {
   customerId: string;
@@ -83,7 +83,87 @@ export function CustomerStrategyCarousel({ data = [] }: Props) {
     <div className="space-y-6">
       
       {/* 1. SUMMARY SECTION */}
-      {safeData.length > 0 && (
+      {/* 1. SUMMARY SECTION */}
+      {safeData.length > 0 && (() => {
+        // Helper untuk Dark Mode UI yang elegan
+        const getCardTheme = (gm: number) => {
+          if (gm < -9) return { 
+            card: "bg-red-500/10 border-red-500/20", 
+            label: "text-red-400", 
+            value: "text-red-500", 
+            icon: "text-red-500" 
+          };
+          if (gm < 0) return { 
+            card: "bg-orange-500/10 border-orange-500/20", 
+            label: "text-orange-400", 
+            value: "text-orange-500", 
+            icon: "text-orange-500" 
+          };
+          if (gm <= 9) return { 
+            card: "bg-emerald-500/10 border-emerald-500/20", 
+            label: "text-emerald-400", 
+            value: "text-emerald-500", 
+            icon: "text-emerald-500" 
+          };
+          return { 
+            card: "bg-blue-500/10 border-blue-500/20", 
+            label: "text-blue-400", 
+            value: "text-blue-500", 
+            icon: "text-blue-500" 
+          };
+        };
+
+        const currentTheme = getCardTheme(avgCurrentGmPct);
+        const projectedTheme = getCardTheme(avgProjectedGmPct);
+
+        return (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 border-b pb-6 mb-6 border-primary/50">
+            <h1 className="text-2xl font-bold text-primary/90 col-span-full">Executive Summary</h1>
+            
+            {/* Total Nett Sales (Tetap Netral/Primary) */}
+            <Card size="sm" className={`bg-primary-50 border-primary-200 shadow-sm max-h-[66px] `}>
+              <CardContent className="p-0 flex flex-col justify-center items-center text-center relative">
+                <div className="absolute -right-4 -top-4 opacity-10">
+                  <CircleDollarSign size={90} />
+                </div>
+                <span className="text-xs text-primary/90 font-semibold uppercase tracking-wider mb-1">Total Nett Sales</span>
+                <span className="text-lg md:text-lg font-bold text-primary/100">{formatCurrency(totalSales)}</span>
+              </CardContent>
+            </Card>
+
+            {/* Current Global GM% Card (Dinamis) */}
+            <Card size="sm" className={`max-h-[66px] shadow-sm ${currentTheme.card}`}>
+              <CardContent className="p-0 flex flex-col justify-center items-center text-center relative">
+                <div className="absolute -right-4 -top-4 opacity-10">
+                  <MountainSnow className={`w-20 h-20 ${currentTheme.icon}`} />
+                </div>
+                <span className={`text-xs font-semibold uppercase tracking-wider  ${currentTheme.label}`}>
+                  Current Global GM%
+                </span>
+                <span className={`text-xl md:text-2xl font-bold ${currentTheme.value}`}>
+                  {avgCurrentGmPct.toFixed(2)}%
+                </span>
+              </CardContent>
+            </Card>
+
+            {/* Projected Global GM% Card (Dinamis) */}
+            <Card size="sm" className={`max-h-[66px] shadow-sm col-span-2 md:col-span-1 ${projectedTheme.card}`}>
+              <CardContent className="p-0 flex flex-col justify-center items-center text-center relative">
+                <div className="absolute -right-4 -top-4 opacity-10">
+                  <Sparkles className={`w-20 h-20 ${projectedTheme.icon}`} />
+                </div>
+                <span className={`text-xs font-semibold uppercase tracking-wider flex items-center z-10 ${projectedTheme.label}`}>
+                  Projected Global GM% <Sparkles className="w-3 h-3 ml-1" />
+                </span>
+                <span className={`text-lg md:text-2xl font-bold z-10 ${projectedTheme.value}`}>
+                  {avgProjectedGmPct.toFixed(2)}%
+                </span>
+              </CardContent>
+            </Card>
+          </div>
+        );
+      })()}
+      {/* {safeData.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 border-b pb-6 mb-6 border-primary/50">
           <h1 className="text-2xl font-bold text-primary/90 col-span-full">Executive Summary</h1>
           <Card size="sm" className="bg-primary-50 border-primary-200 shadow-sm max-h-[66px]">
@@ -95,14 +175,14 @@ export function CustomerStrategyCarousel({ data = [] }: Props) {
           <Card size="sm" className={`max-h-[66px] shadow-sm ${avgCurrentGmPct < 0 ? 'bg-destructive/15 border-destructive/20' : 'bg-primary/5 border-primary/20'}`}>
             <CardContent className="p-0 flex flex-col justify-center items-center text-center">
               
-              {/* Teks Label (Soan atas) */}
+              
               <span className={`text-xs font-semibold uppercase tracking-wider mb-1 ${
                 avgCurrentGmPct < 0 ? 'text-red-600' : 'text-primary/90'
               }`}>
                 Current Global GM%
               </span>
               
-              {/* Angka Persentase */}
+              
               <span className={`text-xl md:text-2xl font-bold ${
                 avgCurrentGmPct < 0 ? 'text-red-700' : 'text-primary'
               }`}>
@@ -121,7 +201,7 @@ export function CustomerStrategyCarousel({ data = [] }: Props) {
             </CardContent>
           </Card>
         </div>
-      )}
+      )} */}
       <Carousel opts={{ align: "start", watchResize: true, watchSlides: false }} className="w-full">
         <CarouselContent>
           {safeData.map((customer, index) => {

@@ -46,6 +46,12 @@ const navItems = [
     icon: GitBranchIcon,
     description: "Product mix mapping",
   },
+  // {
+  //   label: "Product Mapping",
+  //   href: "/dashboard/product-map",
+  //   icon: GitBranchIcon,
+  //   description: "Product mix mapping",
+  // },
 ]
 
 export function DashboardSidebar() {
