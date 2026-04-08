@@ -13,7 +13,7 @@ export default function DashboardLayout({
       <DashboardSidebar />
       
       {/* Area Konten Utama */}
-      <main className="flex flex-1 flex-col w-full relative">
+      <main className="flex-1 min-w-0 w-full overflow-y-auto overflow-x-hidden p-4">
         
         {/* Tombol Toggle Global (Muncul di Mobile & Desktop) */}
         {/* Anda bisa menaruh ini di dalam header/navbar atas Anda */}

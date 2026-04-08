@@ -80,7 +80,7 @@ export function CustomerStrategyCarousel({ data = [] }: Props) {
     return 'text-blue-600'; // Gunakan biru untuk >9 agar beda dengan emerald
   };
   return (
-    <div className="space-y-6 p-4">
+    <div className="space-y-6">
       
       {/* 1. SUMMARY SECTION */}
       {safeData.length > 0 && (
@@ -88,7 +88,7 @@ export function CustomerStrategyCarousel({ data = [] }: Props) {
           <h1 className="text-2xl font-bold text-primary/90 col-span-full">Executive Summary</h1>
           <Card size="sm" className="bg-primary-50 border-primary-200 shadow-sm max-h-[66px]">
             <CardContent className="p-0 flex flex-col justify-center items-center text-center">
-              <span className="text-sm text-primary/90 font-semibold uppercase tracking-wider mb-1">Total Nett Sales</span>
+              <span className="text-xs text-primary/90 font-semibold uppercase tracking-wider mb-1">Total Nett Sales</span>
               <span className="text-lg md:text-lg font-bold text-primary/100">{formatCurrency(totalSales)}</span>
             </CardContent>
           </Card>
@@ -114,15 +114,14 @@ export function CustomerStrategyCarousel({ data = [] }: Props) {
           <Card size="sm" className="max-h-[66px] bg-emerald-50 border-emerald-200 shadow-sm col-span-2 md:col-span-1">
             <CardContent className="p-0 flex flex-col justify-center items-center text-center relative overflow-hidden">
               <div className="absolute -right-4 -top-4 opacity-10"><Sparkles className="w-20 h-20 text-emerald-600" /></div>
-              <span className="text-sm text-emerald-700 font-semibold uppercase tracking-wider mb-1 flex items-center z-10">
+              <span className="text-xs text-emerald-700 font-semibold uppercase tracking-wider flex items-center z-10">
                 Projected Global GM% <Sparkles className="w-3 h-3 ml-1" />
               </span>
-              <span className="text-lg md:text-lg font-bold text-emerald-800 z-10">{avgProjectedGmPct.toFixed(2)}%</span>
+              <span className="text-lg md:text-2xl font-bold text-emerald-800 z-10">{avgProjectedGmPct.toFixed(2)}%</span>
             </CardContent>
           </Card>
         </div>
       )}
-
       <Carousel opts={{ align: "start" }} className="w-full">
         <CarouselContent>
           {safeData.map((customer, index) => {
@@ -424,10 +423,10 @@ export function CustomerStrategyCarousel({ data = [] }: Props) {
           })}
         </CarouselContent>
         {/* Tombol Kiri (Prev) */}
-        <CarouselPrevious className="absolute left-0 -translate-x-1/2 bg-slate-900 text-slate-300 shadow-md border border-slate-700 hover:bg-slate-800 z-10 w-8 h-8" />
+        <CarouselPrevious className="sticky-center left-0 -translate-x-1/2 bg-slate-900 text-slate-300 shadow-md border border-slate-700 hover:bg-slate-800 z-10 w-8 h-8" />
         
         {/* Tombol Kanan (Next) */}
-        <CarouselNext className="absolute right-0 translate-x-1/2 bg-slate-900 text-slate-300 shadow-md border border-slate-700 hover:bg-slate-800 z-10 w-8 h-8" />
+        <CarouselNext className="sticky-center right-0 translate-x-1/2 bg-slate-900 text-slate-300 shadow-md border border-slate-700 hover:bg-slate-800 z-10 w-8 h-8" />
       </Carousel>
     </div>
   )
