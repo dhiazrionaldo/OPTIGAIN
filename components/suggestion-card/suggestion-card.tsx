@@ -49,7 +49,7 @@ interface Props {
 export function CustomerStrategyCarousel({ data = [] }: Props) {
   // Defensive Check: Ensure data is always an array
   const safeData = Array.isArray(data) ? data : [];
-  console.log("Received data for CustomerStrategyCarousel:", safeData);
+  
   const formatCurrency = (value: number) => 
     new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -122,7 +122,7 @@ export function CustomerStrategyCarousel({ data = [] }: Props) {
           </Card>
         </div>
       )}
-      <Carousel opts={{ align: "start" }} className="w-full">
+      <Carousel opts={{ align: "start", watchResize: true, watchSlides: false }} className="w-full">
         <CarouselContent>
           {safeData.map((customer, index) => {
             const isNeedsOpt = customer.currentPerformance.status === "Needs Optimization"
@@ -135,8 +135,8 @@ export function CustomerStrategyCarousel({ data = [] }: Props) {
             const projectedGmGlobal = customer.projectedPerformance.projectedGmPct;
 
             return (
-              <CarouselItem key={`${customer.customerId}-${index}`} className="md:basis-1/2 lg:basis-1/3 pl-4">
-                <Card className="h-full flex flex-col shadow-sm border-primary/10">
+              <CarouselItem key={`${customer.customerId}-${index}`} className="min-w-0 shrink-0 basis-full md:basis-1/2 lg:basis-1/3 pl-4">
+                <Card className="h-full flex flex-col shadow-sm border-primary/10 [content-visibility:auto]">
                   <CardHeader className="pb-3 border-b ">
                     <div className="flex justify-between items-start">
                       <div>
