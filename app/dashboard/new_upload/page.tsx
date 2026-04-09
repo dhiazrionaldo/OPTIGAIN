@@ -1,7 +1,9 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { UploadCard } from "@/components/upload/upload-card"
-import { FileSpreadsheet, Zap, Layers } from "lucide-react"
+import { FileSpreadsheet, Zap, Layers, GitBranch } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { toast } from "@/components/ui/use-toast"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -66,11 +68,24 @@ export default async function DashboardPage() {
   return (
     <div className="flex flex-col gap-4 sm:gap-6 md:gap-2">
       {/* Page header */}
-      <div className="flex flex-col gap-0.5 sm:gap-1">
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-foreground">Dashboard</h1>
-        <p className="text-xs sm:text-sm md:text-base text-muted-foreground">
-          Upload and analyze your gross profit data with AI.
-        </p>
+      <div className="flex flex-col-2 justify-between gap-2 sm:gap-4 md:gap-6">
+        <div className="flex flex-col gap-0.5 sm:gap-1">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-foreground">Dashboard</h1>
+          <p className="text-xs sm:text-sm md:text-base text-muted-foreground">
+            Upload and analyze your gross profit data with AI.
+          </p>
+        </div>
+        <div className="space-y-3 flex flex-col">
+          <a href="/templates/optigain-template.xlsx"
+             download
+             className="ml-auto"
+          >
+            <Button variant="outline" size="sm" className="h-8 sm:h-9 md:h-10 px-3 sm:px-4 md:px-6 text-xs sm:text-sm bg-green-700 hover:bg-green-900  text-primary-foreground font-medium">
+              <FileSpreadsheet className="h-4 w-4 mr-2" />
+              Get Template
+            </Button>
+          </a>
+        </div>
       </div>
 
       {/* Stat cards */}

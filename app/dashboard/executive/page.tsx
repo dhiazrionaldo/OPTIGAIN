@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
+import { Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, ComposedChart, Area } from "recharts"
 import { TrendingUp, AlertCircle, RefreshCw, DollarSign, TrendingDown, Percent, Lightbulb, AlertTriangle } from "lucide-react"
 import { formatCompactNumber, formatCompactCurrency } from "@/lib/number-formatter"
 import type { RevenueForecast, SalesPerformance, GrossProfitRow } from "@/lib/database.types"
@@ -513,7 +513,27 @@ export default function ExecutiveDashboard() {
                 <CardContent className="pt-6">
                   {companyTrend.length > 0 ? (
                     <ResponsiveContainer width="100%" height={350}>
-                      <BarChart data={companyTrend}>
+                      <ComposedChart data={companyTrend}>
+                        <defs>
+                          <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2} />
+                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                          </linearGradient>
+                          <linearGradient id="marginGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
+                            <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                        <XAxis dataKey="period" stroke="#64748b" tick={{ fontSize: 11, fill: "#64748b" }} />
+                        <YAxis yAxisId="left" tickFormatter={yAxisFormatter} width={60} stroke="#64748b" tick={{ fontSize: 11, fill: "#64748b" }} />
+                        <YAxis yAxisId="right" orientation="right" tickFormatter={(v: number) => v.toFixed(1) + "%"} width={70} stroke="#64748b" tick={{ fontSize: 11, fill: "#64748b" }} />
+                        <Tooltip content={<ForecastTooltip />} />
+                        <Area yAxisId="left" type="monotone" dataKey="value" fill="url(#revenueGradient)" stroke="#3b82f6" strokeWidth={2} name="Revenue" dot={{ fill: "#3b82f6", r: 4 }} activeDot={{ r: 6 }} />
+                        <Line yAxisId="right" type="monotone" dataKey="marginPercent" stroke="#10b981" strokeWidth={2} name="Margin %" dot={{ fill: "#10b981", r: 4 }} activeDot={{ r: 6 }} strokeDasharray="5 5" />
+                        <Legend wrapperStyle={{ fontSize: 12, color: "#94a3b8" }} />
+                      </ComposedChart>
+                      {/* <BarChart data={companyTrend}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                         <XAxis dataKey="period" stroke="#64748b" />
                         <YAxis yAxisId="left" tickFormatter={yAxisFormatter} width={60} stroke="#64748b" />
@@ -522,7 +542,7 @@ export default function ExecutiveDashboard() {
                         <Bar yAxisId="left" dataKey="value" fill="#3b82f6" name="Revenue" radius={[8, 8, 0, 0]} />
                         <Bar yAxisId="right" dataKey="marginPercent" fill="#10b981" name="Margin %" radius={[8, 8, 0, 0]} />
                         <Legend />
-                      </BarChart>
+                      </BarChart> */}
                     </ResponsiveContainer>
                   ) : (
                     <div className="flex h-96 items-center justify-center text-slate-500">No company forecast data available</div>
@@ -553,16 +573,26 @@ export default function ExecutiveDashboard() {
                   </CardHeader>
                   <CardContent className="pt-4">
                     <ResponsiveContainer width="100%" height={250}>
-                      <BarChart data={customerTrends[selectedCustomer || Object.keys(customerTrends)[0]]}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                        <XAxis dataKey="period" stroke="#64748b" />
-                        <YAxis yAxisId="left" tickFormatter={yAxisFormatter} width={60} stroke="#64748b" />
-                        <YAxis yAxisId="right" orientation="right" tickFormatter={(v: number) => v.toFixed(1) + "%"} width={70} stroke="#64748b" />
-                        <Tooltip content={<ForecastTooltip />} formatter={tooltipFormatter} contentStyle={{backgroundColor: "#ffffff", border: "2px solid #1e293b", borderRadius: "8px", boxShadow: "0 10px 15px rgba(0, 0, 0, 0.3)", color:"#000000"}} />
-                        <Bar yAxisId="left" dataKey="value" fill="#3b82f6" name="Revenue" radius={[8, 8, 0, 0]} />
-                        <Bar yAxisId="right" dataKey="marginPercent" fill="#10b981" name="Margin %" radius={[8, 8, 0, 0]} />
-                        <Legend />
-                      </BarChart>
+                      <ComposedChart data={customerTrends[selectedCustomer || Object.keys(customerTrends)[0]]}>
+                        <defs>
+                          <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2} />
+                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                          </linearGradient>
+                          <linearGradient id="marginGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
+                            <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                        <XAxis dataKey="period" stroke="#64748b" tick={{ fontSize: 11, fill: "#64748b" }} />
+                        <YAxis yAxisId="left" tickFormatter={yAxisFormatter} width={60} stroke="#64748b" tick={{ fontSize: 11, fill: "#64748b" }} />
+                        <YAxis yAxisId="right" orientation="right" tickFormatter={(v: number) => v.toFixed(1) + "%"} width={70} stroke="#64748b" tick={{ fontSize: 11, fill: "#64748b" }} />
+                        <Tooltip content={<ForecastTooltip />} />
+                        <Area yAxisId="left" type="monotone" dataKey="value" fill="url(#revenueGradient)" stroke="#3b82f6" strokeWidth={2} name="Revenue" dot={{ fill: "#3b82f6", r: 4 }} activeDot={{ r: 6 }} />
+                        <Line yAxisId="right" type="monotone" dataKey="marginPercent" stroke="#10b981" strokeWidth={2} name="Margin %" dot={{ fill: "#10b981", r: 4 }} activeDot={{ r: 6 }} strokeDasharray="5 5" />
+                        <Legend wrapperStyle={{ fontSize: 12, color: "#94a3b8" }} />
+                      </ComposedChart>
                     </ResponsiveContainer>
                   </CardContent>
                 </Card>
@@ -593,16 +623,26 @@ export default function ExecutiveDashboard() {
                   </CardHeader>
                   <CardContent className="pt-4">
                     <ResponsiveContainer width="100%" height={250}>
-                      <BarChart data={productTrends[selectedProduct || Object.keys(productTrends)[0]]}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                        <XAxis dataKey="period" stroke="#64748b" />
-                        <YAxis yAxisId="left" tickFormatter={yAxisFormatter} width={60} stroke="#64748b" />
-                        <YAxis yAxisId="right" orientation="right" tickFormatter={(v: number) => v.toFixed(1) + "%"} width={70} stroke="#64748b" />
-                        <Tooltip content={<ForecastTooltip />} formatter={tooltipFormatter} contentStyle={{backgroundColor: "#ffffff", border: "2px solid #1e293b", borderRadius: "8px", boxShadow: "0 10px 15px rgba(0, 0, 0, 0.3)", color:"#000000"}} />
-                        <Bar yAxisId="left" dataKey="value" fill="#3b82f6" name="Revenue" radius={[8, 8, 0, 0]} />
-                        <Bar yAxisId="right" dataKey="marginPercent" fill="#10b981" name="Margin %" radius={[8, 8, 0, 0]} />
-                        <Legend />
-                      </BarChart>
+                      <ComposedChart data={productTrends[selectedProduct || Object.keys(productTrends)[0]]}>
+                        <defs>
+                          <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2} />
+                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                          </linearGradient>
+                          <linearGradient id="marginGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
+                            <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                        <XAxis dataKey="period" stroke="#64748b" tick={{ fontSize: 11, fill: "#64748b" }} />
+                        <YAxis yAxisId="left" tickFormatter={yAxisFormatter} width={60} stroke="#64748b" tick={{ fontSize: 11, fill: "#64748b" }} />
+                        <YAxis yAxisId="right" orientation="right" tickFormatter={(v: number) => v.toFixed(1) + "%"} width={70} stroke="#64748b" tick={{ fontSize: 11, fill: "#64748b" }} />
+                        <Tooltip content={<ForecastTooltip />} />
+                        <Area yAxisId="left" type="monotone" dataKey="value" fill="url(#revenueGradient)" stroke="#3b82f6" strokeWidth={2} name="Revenue" dot={{ fill: "#3b82f6", r: 4 }} activeDot={{ r: 6 }} />
+                        <Line yAxisId="right" type="monotone" dataKey="marginPercent" stroke="#10b981" strokeWidth={2} name="Margin %" dot={{ fill: "#10b981", r: 4 }} activeDot={{ r: 6 }} strokeDasharray="5 5" />
+                        <Legend wrapperStyle={{ fontSize: 12, color: "#94a3b8" }} />
+                      </ComposedChart>
                     </ResponsiveContainer>
                   </CardContent>
                 </Card>

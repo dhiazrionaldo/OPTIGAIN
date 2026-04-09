@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { UploadsTable } from "@/components/tables/uploads-table"
+import { Button } from "@/components/ui/button";
 
 export default async function UploadsPage({ searchParams }: { searchParams: Promise<{ month?: string; year?: string }> }) {
   const params = await searchParams
