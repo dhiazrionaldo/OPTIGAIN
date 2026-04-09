@@ -50,13 +50,13 @@ export async function updateSession(request: NextRequest) {
       request.nextUrl.pathname === "/register")
   ) {
     const url = request.nextUrl.clone()
-    url.pathname = "/dashboard"
+    url.pathname = "/dashboard/executive"
     return NextResponse.redirect(url)
   }
 
   if (user && request.nextUrl.pathname === "/") {
     const url = request.nextUrl.clone()
-    url.pathname = "/dashboard"
+    url.pathname = "/dashboard/executive"
     return NextResponse.redirect(url)
   }
 

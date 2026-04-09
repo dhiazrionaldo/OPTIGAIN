@@ -193,9 +193,9 @@ export default function ExecutiveDashboard() {
 
       if (typedSalesData && typedSalesData.length > 0) {
         // Group by level and dimension_value
-        const companyRows = typedSalesData.filter(row => row.level === "company")
-        const customerRows = typedSalesData.filter(row => row.level === "customer")
-        const productRows = typedSalesData.filter(row => row.level === "product")
+        const companyRows = typedSalesData.filter(row => row.level?.toLowerCase() === "company")
+        const customerRows = typedSalesData.filter(row => row.level?.toLowerCase() === "customer")
+        const productRows = typedSalesData.filter(row => row.level?.toLowerCase() === "product")
 
         // Helper to build trend by period for a set of rows
         function buildTrend(rows: RevenueForecast[], groupKey: string | null = null) {
@@ -283,7 +283,7 @@ export default function ExecutiveDashboard() {
           .sort((a, b) => b.value - a.value)
           .slice(0, 10)
         setTopProducts(forecastedProducts)
-
+        
         // Top 10 forecasted customers (by predicted_revenue)
         const forecastedCustomerMap = new Map<string, number>()
         for (const row of customerRows) {
@@ -320,6 +320,7 @@ export default function ExecutiveDashboard() {
         setAiReasoning(forecast.ai_reasoning || "")
         setAiSuggestions(forecast.ai_suggestions || "")
       }
+      
     } catch (err) {
       console.error("Error loading dashboard:", err)
       setError("Failed to load dashboard data")
@@ -335,7 +336,7 @@ export default function ExecutiveDashboard() {
 
       const response = await fetch("/api/revenue/forecast", { method: "POST" })
       const result = await response.json()
-
+      
       if (!result.success) {
         setError(result.error || "Forecasting failed")
         return
