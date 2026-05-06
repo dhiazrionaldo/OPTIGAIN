@@ -42,7 +42,7 @@ export function LoginForm() {
         )}
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="email" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+          <Label htmlFor="email" className="text-xs font-medium uppercase tracking-wider">
             Email
           </Label>
           <Input
@@ -57,7 +57,7 @@ export function LoginForm() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="password" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+          <Label htmlFor="password" className="text-xs font-medium uppercase tracking-wider">
             Password
           </Label>
           <Input
@@ -99,7 +99,7 @@ export function LoginForm() {
         </div>
       </div>
 
-      <p className="text-center text-sm text-muted-foreground">
+      <p className="text-center text-sm ">
         {"Don't have an account? "}
         <Link href="/register" className="font-medium text-primary hover:text-primary/80 transition-colors">
           Create one

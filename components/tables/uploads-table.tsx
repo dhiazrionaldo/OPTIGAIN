@@ -93,7 +93,7 @@ export function UploadsTable({ uploads }: { uploads: Upload[] }) {
                     asChild
                     variant="ghost"
                     size="sm"
-                    className="h-8 gap-2 text-muted-foreground hover:text-foreground transition-colors"
+                    className="h-8 gap-2 text-muted-foreground hover:text-foreground hover:bg-primary/10 transition-colors" 
                   >
                     <Link href={`/dashboard/uploads/${upload.id}`}>
                       <Eye className="h-3.5 w-3.5" />

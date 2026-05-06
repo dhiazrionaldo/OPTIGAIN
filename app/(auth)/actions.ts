@@ -18,7 +18,7 @@ export async function login(formData: FormData) {
     return { error: error.message }
   }
 
-  redirect("/dashboard/executive")
+  redirect("/dashboard/new_upload")
 }
 
 export async function register(formData: FormData) {
@@ -36,7 +36,7 @@ export async function register(formData: FormData) {
     return { error: error.message }
   }
 
-  redirect("/dashboard/executive")
+  redirect("/dashboard/new_upload")
 }
 
 export async function logout() {

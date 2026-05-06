@@ -38,60 +38,56 @@
   --sidebar-border: oklch(0.18 0.015 270);
   --sidebar-ring: oklch(0.65 0.20 270);
 } */
- :root {
-  /* Background: White with a hint of slate (biar ga silau banget) */
-  --background: oklch(0.99 0.005 260); 
-  --foreground: oklch(0.20 0.02 260);
+:root {
+  /* Background & Foreground */
+  --background: oklch(1 0 0); /* Putih bersih */
+  --foreground: oklch(0.25 0.02 260); /* Hitam keabuan modern */
 
-  /* Card: Pure white with subtle borders */
+  /* Card & Popover */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.20 0.02 260);
-  
-  /* Popover */
+  --card-foreground: oklch(0.25 0.02 260);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.20 0.02 260);
+  --popover-foreground: oklch(0.25 0.02 260);
 
-  /* Primary: Kita ambil ungu deep dari versi dark sebelumnya */
-  --primary: oklch(0.55 0.22 270); 
-  --primary-foreground: oklch(0.99 0 0);
+  /* Primary (Accent Modern) */
+  --primary: oklch(0.55 0.18 260); /* Blue-Indigo Modern */
+  --primary-foreground: oklch(0.98 0 0);
 
-  /* Secondary: Soft lavender-grey (biar nyambung sama primary) */
-  --secondary: oklch(0.94 0.02 270);
-  --secondary-foreground: oklch(0.35 0.05 270);
-
-  /* Muted */
+  /* Secondary & Muted (Soft Grays) */
+  --secondary: oklch(0.96 0.01 260); /* Abu-abu sangat muda */
+  --secondary-foreground: oklch(0.4 0.02 260);
   --muted: oklch(0.96 0.01 260);
-  --muted-foreground: oklch(0.45 0.02 260);
+  --muted-foreground: oklch(0.55 0.02 260); /* Abu-abu teks pembantu */
 
-  /* Accent: Ini rahasianya, kita ambil Teal/Emerald tajam dari versi lama */
-  --accent: oklch(0.65 0.18 170); 
-  --accent-foreground: oklch(1 0 0);
+  /* Accent (Soft Highlight) */
+  --accent: oklch(0.96 0.01 260);
+  --accent-foreground: oklch(0.25 0.02 260);
 
-  /* Feedback */
-  --destructive: oklch(0.60 0.22 25);
+  /* Feedback Colors */
+  --destructive: oklch(0.6 0.18 25);
   --destructive-foreground: oklch(0.98 0 0);
 
-  /* Borders: Lebih tegas dari sebelumnya supaya struktur card kelihatan */
-  --border: oklch(0.91 0.01 260);
-  --input: oklch(0.91 0.01 260);
-  --ring: oklch(0.55 0.22 270);
+  /* Borders & Inputs */
+  --border: oklch(0.9 0.01 260); /* Garis tipis halus */
+  --input: oklch(0.9 0.01 260);
+  --ring: oklch(0.55 0.18 260);
 
-  /* Charts - Vibrant Palette */
-  --chart-1: oklch(0.55 0.22 270); /* Purple */
-  --chart-2: oklch(0.65 0.18 170); /* Teal */
-  --chart-3: oklch(0.75 0.15 80);  /* Gold/Orange */
-  --chart-4: oklch(0.60 0.18 340); /* Pink/Red */
-  --chart-5: oklch(0.50 0.15 220); /* Deep Blue */
+  /* Charts - Modern Palette */
+  --chart-1: oklch(0.6 0.16 260);
+  --chart-2: oklch(0.7 0.12 180);
+  --chart-3: oklch(0.4 0.14 230);
+  --chart-4: oklch(0.8 0.15 100);
+  --chart-5: oklch(0.65 0.18 30);
 
-  /* Sidebar: Modern Light Greyish-Blue */
-  --sidebar: oklch(0.97 0.01 260);
-  --sidebar-foreground: oklch(0.25 0.03 260);
-  --sidebar-primary: oklch(0.55 0.22 270);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.92 0.02 260);
-  --sidebar-accent-foreground: oklch(0.20 0.03 260);
-  --sidebar-border: oklch(0.88 0.01 260);
-  --sidebar-ring: oklch(0.55 0.22 270);
+  /* Sidebar Modern White */
+  --sidebar: oklch(0.98 0.005 260); /* Sidebar hampir putih */
+  --sidebar-foreground: oklch(0.3 0.02 260);
+  --sidebar-primary: oklch(0.55 0.18 260);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(74.66% 0.11397 261.278);
+  --sidebar-accent-foreground: oklch(0.2 0.02 260);
+  --sidebar-border: oklch(0.92 0.01 260);
+  --sidebar-ring: oklch(0.55 0.18 260);
 
   --radius: 0.625rem;
 }

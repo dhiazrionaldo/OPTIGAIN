@@ -54,7 +54,7 @@ export function RegisterForm() {
         )}
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="email" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+          <Label htmlFor="email" className="text-xs font-medium uppercase tracking-wider">
             Email
           </Label>
           <Input
@@ -69,7 +69,7 @@ export function RegisterForm() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="password" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+          <Label htmlFor="password" className="text-xs font-medium uppercase tracking-wider">
             Password
           </Label>
           <Input
@@ -84,7 +84,7 @@ export function RegisterForm() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="confirmPassword" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+          <Label htmlFor="confirmPassword" className="text-xs font-medium uppercase tracking-wider">
             Confirm Password
           </Label>
           <Input

@@ -4,39 +4,54 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  /* BACKGROUND: Putih bersih, bukan biru muda pudar */
+  --background: oklch(0.99 0.002 260); 
+  --foreground: oklch(0.18 0.015 260); /* Teks hitam keabuan tajam */
+
+  /* CARDS: Putih murni agar melayang di atas background */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.18 0.015 260);
+  
+  /* POPOVER: Clean white */
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --popover-foreground: oklch(0.18 0.015 260);
+
+  /* PRIMARY: Ungu Indigo Modern (Elegan & AI-friendly) */
+  --primary: rgb(0 155 158); 
+  --primary-foreground: oklch(0.99 0 0);
+
+  /* SECONDARY: Soft Grayish Purple (Buat button non-aktif) */
+  --secondary: oklch(0.96 0.01 270);
+  --secondary-foreground: oklch(0.35 0.05 270);
+
+  /* MUTED: Light gray buat placeholder atau teks pembantu */
+  --muted: oklch(0.96 0.005 260);
+  --muted-foreground: oklch(0.50 0.015 260);
+
+  /* ACCENT: Teal Vibrant (Buat status 'Optimal' atau indikator positif) */
+  --accent: oklch(0.65 0.18 170); 
+  --accent-foreground: oklch(0.18 0.015 260);
+
+  /* DESTRUCTIVE: Red Candy (Buat 'Needs Optimization') */
+  --destructive: oklch(0.60 0.20 25);
+  --destructive-foreground: oklch(1 0 0);
+
+  /* BORDERS: Super tipis dan halus */
+  --border: oklch(0.92 0.01 260);
+  --input: oklch(0.92 0.01 260);
+  --ring: oklch(0.55 0.22 270);
+
+  /* SIDEBAR: Sedikit keabu-abuan agar kontras dengan main content */
+  --sidebar: rgb(0 155 158); /* Ungu yang lebih gelap dan premium */
+  --sidebar-foreground: oklch(0.99 0 0); /* Putih bersih */
+  --sidebar-primary: oklch(0.99 0 0); 
+  --sidebar-primary-foreground: rgb(0 155 158);;
+  --sidebar-accent: oklch(1 0 0 / 0.15); /* Putih transparan halus untuk hover */
+  --sidebar-accent-foreground: oklch(1 0 0);
+  --sidebar-border: oklch(1 0 0 / 0.1);
+  --sidebar-ring: oklch(0.99 0 0);
+
+  --radius: 0.75rem; /* Corner lebih bulat agar modern */
 }
 
 .dark {
@@ -75,8 +90,8 @@
 }
 
 @theme inline {
-  --font-sans: 'Geist', 'Geist Fallback';
-  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+  --font-sans: var(--font-inter), 'Inter', system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), 'JetBrains Mono', monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -113,6 +128,33 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  /* typography */
+  --font-size-fluid-xs:  clamp(5px, 2.2vw, 9px);
+  --font-size-fluid-sm:  clamp(11px, 2.8vw, 13px);
+  --font-size-fluid-base: clamp(12px, 3.2vw, 15px);
+  --font-size-fluid-lg:  clamp(14px, 3.8vw, 18px);
+  --font-size-fluid-xl:  clamp(16px, 4.2vw, 20px);
+  --font-size-fluid-2xl: clamp(18px, 5vw, 24px);
+}
+
+
+@utility text-fluid-xs {
+  font-size: clamp(5px, 2.2vw, 9px);
+}
+@utility text-fluid-sm {
+  font-size: clamp(11px, 2.8vw, 13px);
+}
+@utility text-fluid-base {
+  font-size: clamp(12px, 3.2vw, 15px);
+}
+@utility text-fluid-lg {
+  font-size: clamp(14px, 3.8vw, 18px);
+}
+@utility text-fluid-xl {
+  font-size: clamp(16px, 4.2vw, 20px);
+}
+@utility text-fluid-2xl {
+  font-size: clamp(18px, 5vw, 24px);
 }
 
 @layer base {
@@ -122,4 +164,87 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Fix cmdk highlight color */
+  [cmdk-item][aria-selected="true"] {
+    background-color: oklch(0.55 0.22 270) !important;
+    color: oklch(0.99 0 0) !important;
+  }
+  /* Hide main page scrollbar completely */
+  html {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overflow-y: scroll !important;
+  }
+  
+  html::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+  
+  html::-webkit-scrollbar-track {
+    display: none !important;
+  }
+  
+  html::-webkit-scrollbar-thumb {
+    display: none !important;
+  }
+  
+  html::-webkit-scrollbar-corner {
+    display: none !important;
+  }
+  
+  body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  body::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
 }
+
+/* Hide scrollbar on main element and overflow containers */
+main {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+main::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Hide scrollbar by default, show on active scroll for components */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Show scrollbar on scroll for webkit browsers */
+.scrollbar-hide:active::-webkit-scrollbar,
+.scrollbar-hide:hover::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+  height: 8px;
+}
+
+.scrollbar-hide:active::-webkit-scrollbar-track,
+.scrollbar-hide:hover::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-hide:active::-webkit-scrollbar-thumb,
+.scrollbar-hide:hover::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+

@@ -1,9 +1,8 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { UploadCard } from "@/components/upload/upload-card"
-import { FileSpreadsheet, Zap, Layers, GitBranch } from "lucide-react"
+import { FileSpreadsheet, Zap, Layers, GitBranch, CalendarDays } from "lucide-react" // Tambah CalendarDays biar iconnya nyambung
 import { Button } from "@/components/ui/button"
-import { toast } from "@/components/ui/use-toast"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -15,6 +14,7 @@ export default async function DashboardPage() {
     redirect("/login")
   }
 
+  // 1. Hitung total upload
   const { count: uploadCount } = await supabase
     .from("gross_profit_uploads")
     .select("*", { count: "exact", head: true })
@@ -31,17 +31,34 @@ export default async function DashboardPage() {
   let aiCount = 0
 
   if (uploadIds.length > 0) {
+    // 2. Hitung Total Data Rows
     const { count: rc } = await supabase
       .from("gross_profit_rows")
       .select("*", { count: "exact", head: true })
       .in("upload_id", uploadIds)
     rowCount = rc || 0
 
-    const { count: ac } = await supabase
-      .from("ai_recommendations")
-      .select("*", { count: "exact", head: true })
+    // 3. LOGIKA BARU: Hitung Bulan Unik (Month Data)
+    const { data: monthData, error: monthError } = await supabase
+      .from("gross_profit_rows")
+      .select("sheet_month, sheet_year") // Hanya ambil 2 kolom ini biar ringan
       .in("upload_id", uploadIds)
-    aiCount = ac || 0
+
+    if (!monthError && monthData) {
+      // Gunakan Set untuk membuang duplikat otomatis
+      const uniqueMonths = new Set()
+      
+      for (const row of monthData) {
+        // Pastikan datanya tidak null/0
+        if (row.sheet_month && row.sheet_year) {
+          // Gabungkan jadi key unik, contoh: "2026-3"
+          uniqueMonths.add(`${row.sheet_year}-${row.sheet_month}`)
+        }
+      }
+      
+      // Ukuran dari Set adalah jumlah bulan unik yang kita punya
+      aiCount = uniqueMonths.size
+    }
   }
 
   const stats = [
@@ -58,10 +75,10 @@ export default async function DashboardPage() {
       accent: "text-accent bg-accent/10 ring-accent/20",
     },
     {
-      label: "AI Predictions",
+      label: "Month Coverage", // Label diganti sedikit biar lebih make sense
       value: aiCount,
-      icon: Zap,
-      accent: "text-chart-3 bg-chart-3/10 ring-chart-3/20",
+      icon: CalendarDays, // Icon pakai kalender agar lebih relevan
+      accent: "text-orange-500 bg-orange-500/10 ring-orange-500/20",
     },
   ]
 
@@ -80,7 +97,7 @@ export default async function DashboardPage() {
              download
              className="ml-auto"
           >
-            <Button variant="outline" size="sm" className="h-8 sm:h-9 md:h-10 px-3 sm:px-4 md:px-6 text-xs sm:text-sm bg-green-700 hover:bg-green-900  text-primary-foreground font-medium">
+            <Button variant="outline" size="sm" className="h-8 sm:h-9 md:h-10 px-3 sm:px-4 md:px-6 text-xs sm:text-sm bg-emerald-600 hover:bg-emerald-700 text-white font-medium border-0">
               <FileSpreadsheet className="h-4 w-4 mr-2" />
               Get Template
             </Button>
@@ -93,14 +110,14 @@ export default async function DashboardPage() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="group relative flex items-center gap-3 sm:gap-4 rounded-lg sm:rounded-xl border border-border bg-card p-3 sm:p-4 md:p-5 transition-all duration-200 hover:border-border/80 hover:shadow-lg hover:shadow-primary/5"
+            className="group relative flex items-center gap-3 sm:gap-4 rounded-lg sm:rounded-xl border border-border bg-card/60 backdrop-blur-sm p-3 sm:p-4 md:p-5 transition-all duration-200 hover:border-border/80 hover:shadow-lg hover:shadow-primary/5"
           >
             <div className={`flex h-9 sm:h-10 md:h-11 w-9 sm:w-10 md:w-11 shrink-0 items-center justify-center rounded-lg sm:rounded-xl ring-1 ${stat.accent}`}>
               <stat.icon className="h-4 sm:h-4.5 md:h-5 w-4 sm:w-4.5 md:w-5" />
             </div>
             <div className="flex flex-col min-w-0">
-              <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">{stat.label}</span>
-              <span className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-foreground">{stat.value}</span>
+              <span className="text-[10px] sm:text-xs font-bold text-muted-foreground uppercase tracking-widest">{stat.label}</span>
+              <span className="text-lg sm:text-xl md:text-2xl font-black tracking-tight text-foreground">{stat.value}</span>
             </div>
           </div>
         ))}

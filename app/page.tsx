@@ -6,8 +6,8 @@ export default async function HomePage() {
   const { data: { user } } = await supabase.auth.getUser()
 
   if (user) {
-    // send authenticated users directly to executive dashboard by default
-    redirect("/dashboard/executive")
+    // send authenticated users directly to new upload page by default
+    redirect("/dashboard/new_upload")
   } else {
     redirect("/login")
   }

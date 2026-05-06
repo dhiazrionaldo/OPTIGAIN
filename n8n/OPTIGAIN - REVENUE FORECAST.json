@@ -1,0 +1,257 @@
+{
+  "name": "OPTIGAIN - REVENUE FORECAST",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "revenue-forecast",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "79decdaa-de26-436b-a882-7fd06b936dc6",
+      "name": "Webhook",
+      "webhookId": "4ab4eb57-657d-4ad1-a39b-b23190b7387a"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "sales_performance",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "6a39fbfb-8ac6-4e6a-98ff-243023267891",
+      "name": "Get many rows",
+      "credentials": {
+        "supabaseApi": {
+          "id": "k3IvGWToK0nAja4U",
+          "name": "Supabase account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"302\",\n  \"message\": \"Error Get Sales data!\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        432,
+        176
+      ],
+      "id": "cb31580b-5bbc-4f20-aeea-01a1e3505cd0",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst rows  = items.map(i => i.json);\nreturn [{ json: { data: rows, forecast_horizon: 3 } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        -16
+      ],
+      "id": "2522edda-eebf-4ae9-a149-4d6baadfcea8",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://10.100.17.2:8002/forecast",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "data",
+              "value": "={{ $json.data }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        640,
+        -16
+      ],
+      "id": "a3ab271a-ade4-4edc-8a58-bea8ed58f78b",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "tableId": "revenue_forecasts",
+        "dataToSend": "autoMapInputData",
+        "inputsToIgnore": "="
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1056,
+        -16
+      ],
+      "id": "daef8378-92e9-4bb1-b4a0-87470bdc0d35",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "k3IvGWToK0nAja4U",
+          "name": "Supabase account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\n\nreturn response.rows.map(row => ({ json: row }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        848,
+        -16
+      ],
+      "id": "eff7930c-6a37-4d3a-ba22-3f348e5f611b",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"200\",\n  \"message\": \"Success\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1264,
+        -32
+      ],
+      "id": "c30f1b15-36c9-4912-aaf0-67d110fdaed9",
+      "name": "success insert"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"302\",\n  \"message\": \"Error Forecasting Revenue!\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1264,
+        144
+      ],
+      "id": "f103342a-9593-4779-8fa5-900094d98607",
+      "name": "Respond to Webhook1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get many rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many rows": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row": {
+      "main": [
+        [
+          {
+            "node": "success insert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "be2d5514-9ee7-4b09-be3a-10517f0990f5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "afd058a4e0c30bb24b580135821fe1702f8496d2310a5eb11ecb88ae5f32c129"
+  },
+  "id": "AWPjxGw8Jwt3WXCA",
+  "tags": []
+}

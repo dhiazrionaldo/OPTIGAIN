@@ -37,26 +37,21 @@ export default async function UploadDetailPage({
   }
 
   // fetch rows and current recommendations in parallel for speed
-  const [rowsResp, recosResp] = await Promise.all([
+  const [rowsResp] = await Promise.all([
     supabase
       .from("gross_profit_rows")
       .select("*")
       .eq("upload_id", id)
-      .order("customer_name"),
-    supabase
-      .from("ai_recommendations")
-      .select("*")
-      .eq("upload_id", id),
+      .order("customer_name")
   ])
   const rowsTyped = (rowsResp.data as unknown) as import("@/lib/database.types").GrossProfitRow[] | null
-  const recommendations = (recosResp.data as any[]) || []
 
-  const hasError = rowsTyped && rowsTyped.length > 0 && recommendations.length === 0
+  const hasError = !rowsTyped && rowsTyped!.length < 0 
   
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-4">
-        <Button asChild variant="ghost" size="sm" className="h-8 gap-2 text-muted-foreground hover:text-foreground">
+        <Button asChild variant="ghost" size="sm" className="h-8 gap-2 text-muted-foreground hover:text-foreground hover:bg-muted">
           <Link href="/dashboard/uploads">
             <ArrowLeft className="h-3.5 w-3.5" />
             Back
@@ -81,7 +76,7 @@ export default async function UploadDetailPage({
         <ComparisonView
           uploadId={id}
           rows={rowsTyped || []}
-          recommendations={recommendations || []}
+          recommendations={[]}
         />
       )}
     </div>

@@ -126,7 +126,7 @@ function expandMergedCells(sheet: XLSX.WorkSheet) {
 // Supports formats like "Sales Jan'26 by Cust.& KOG" or "Sales Feb 2026" etc.
 function parseSheetDate(sheetName: string): { month: number; year: number } | null {
   const monthNames = ["jan", "feb", "mar", "apr", "may", "jun",
-                      "jul", "aug", "sep", "oct", "nov", "dec"]
+                      "jul", "aug", "sep", "oct", "nov", "des"]
 
   // Match 3-4 letter month abbreviations (handles "Sept" as well as "Sep")
   const m = sheetName.match(/([A-Za-z]{3,4})\s*'?(\d{2,4})/)
