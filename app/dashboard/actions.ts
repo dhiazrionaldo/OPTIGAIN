@@ -133,32 +133,88 @@ export async function uploadExcelAction(formData: FormData) {
 
   // ── 4. product_master (upsert, skip duplicates by product_name + customer_id) ──
   // Collect unique (customer_name, product_spec) pairs
-  const seenProducts = new Set<string>()
-  const productsToUpsert: { family: string; product_name: string;}[] = []
+  // const seenProducts = new Set<string>()
+  // const productsToUpsert: { family: string; product_name: string;}[] = []
+
+  // for (const row of parseResult.rows) {
+  //   const customerId = customerIdByName.get(row.customer_name)
+  //   const productName = row.product_spec  // adjust if your field name differs
+
+  //   if (!customerId || !productName) continue
+
+  //   const key = `${customerId}::${productName}`
+  //   if (seenProducts.has(key)) continue
+  //   seenProducts.add(key)
+
+  //   productsToUpsert.push({
+  //     family: productName.slice(0, 2).toUpperCase(),  // first 2 chars = family
+  //     product_name: productName
+  //   })
+  // }
+
+  // if (productsToUpsert.length > 0) {
+  //   const { error: productError } = await supabase
+  //     .schema("public")
+  //     .from("product_master")
+  //     .upsert(productsToUpsert, {
+  //       onConflict: "product_name",  // requires a UNIQUE constraint on (product_name, customer_id)
+  //       ignoreDuplicates: true,
+  //     })
+
+  //   if (productError) {
+  //     return { error: `Failed to upsert product_master: ${productError.message}` }
+  //   }
+  // }
+  // ── 4. product_master (upsert dengan cogs_unit & average_selling_price) ──────
+  //
+  // Hitung rata-rata ASP dan COGS/unit per produk dari semua rows di upload ini.
+  // Kalau produk sudah ada di DB, angkanya akan di-update (bukan di-skip),
+  // supaya setiap upload Excel baru me-refresh nilai catalog.
+
+  const productStatsMap = new Map<
+    string,
+    {
+      family: string
+      totalNetSales: number
+      totalCogs: number
+      totalQty: number
+    }
+  >()
 
   for (const row of parseResult.rows) {
-    const customerId = customerIdByName.get(row.customer_name)
-    const productName = row.product_spec  // adjust if your field name differs
+    const key = row.product_spec
+    if (!key) continue
 
-    if (!customerId || !productName) continue
+    const existing = productStatsMap.get(key) ?? {
+      family: key.slice(0, 2).toUpperCase(),
+      totalNetSales: 0,
+      totalCogs: 0,
+      totalQty: 0,
+    }
 
-    const key = `${customerId}::${productName}`
-    if (seenProducts.has(key)) continue
-    seenProducts.add(key)
-
-    productsToUpsert.push({
-      family: productName.slice(0, 2).toUpperCase(),  // first 2 chars = family
-      product_name: productName
+    productStatsMap.set(key, {
+      family: existing.family,
+      totalNetSales: existing.totalNetSales + (row.net_sales  ?? 0),
+      totalCogs:     existing.totalCogs     + (row.cogs       ?? 0),
+      totalQty:      existing.totalQty      + (row.quantity   ?? 0),
     })
   }
+
+  const productsToUpsert = [...productStatsMap.entries()].map(([productName, stats]) => ({
+    product_name:          productName,
+    family:                stats.family,
+    // Hindari division-by-zero: kalau qty = 0 simpan null
+    cogs_unit:             stats.totalQty > 0 ? stats.totalCogs     / stats.totalQty : null,
+    average_selling_price: stats.totalQty > 0 ? stats.totalNetSales / stats.totalQty : null,
+  }))
 
   if (productsToUpsert.length > 0) {
     const { error: productError } = await supabase
       .schema("public")
       .from("product_master")
       .upsert(productsToUpsert, {
-        onConflict: "product_name",  // requires a UNIQUE constraint on (product_name, customer_id)
-        ignoreDuplicates: true,
+        onConflict: "product_name",
+        ignoreDuplicates: false,   // ← false supaya nilai ASP & COGS ikut ter-update tiap upload baru
       })
 
     if (productError) {
@@ -179,116 +235,6 @@ export async function uploadExcelAction(formData: FormData) {
   redirect(`/dashboard/uploads/${upload.id}`)
 }
 
-// export async function uploadExcelAction(formData: FormData) {
-    
-//   const supabase = await createClient()
-//   const {
-//     data: { user },
-//   } = await supabase.auth.getUser()
-
-//   if (!user) {
-//     return { error: "Not authenticated" }
-//   }
-
-//   const file = formData.get("file") as File
-//   if (!file || !file.name) {
-//     return { error: "No file provided" }
-//   }
-
-//   if (!file.name.endsWith(".xlsx") && !file.name.endsWith(".xls")) {
-//     return { error: "Please upload a valid Excel file (.xlsx or .xls)" }
-//   }
-
-//   // Parse the Excel file
-//   const buffer = await file.arrayBuffer()
-//   const parseResult = parseExcelBuffer(buffer)
-
-//   if (!parseResult.success) {
-//     return { error: parseResult.errors.join(". ") }
-//   }
-
-//   if (parseResult.rows.length === 0) {
-//     return { error: "No valid data rows found in the file" }
-//   }
-  
-//   // Create upload record (include sheet month/year if we parsed them)
-//   const uploadInsert: any = {
-//     user_id: user.id,
-//     file_name: file.name,
-//   }
-
-//   if (parseResult.sheetMonth != null) {
-//     uploadInsert.sheet_month = parseResult.sheetMonth
-//   }
-//   if (parseResult.sheetYear != null) {
-//     uploadInsert.sheet_year = parseResult.sheetYear
-//   }
-
-//   // DEBUG: Write parsed rows to a debug file before DB insert
-//     try {
-//       const fs = await import('fs/promises');
-//       await fs.appendFile(
-//         process.cwd() + '/debug-parsed-rows.log',
-//         JSON.stringify({
-//           timestamp: new Date().toISOString(),
-//           file: file.name,
-//           rows: parseResult.rows
-//         }) + '\n'
-//       );
-//     } catch (e) {
-//       // Ignore file write errors in production
-//     }
-
-//   const { data: upload, error: uploadError } = await supabase
-//     .schema("public")
-//     .from("gross_profit_uploads")
-//     .insert(uploadInsert)
-//     .select()
-//     .single()
-    
-//   if (uploadError || !upload) {
-//     console.log(uploadError)
-//     return { error: `Failed to create upload record: ${uploadError?.message || "Unknown error"}` }
-//   }
-
-//   // Insert rows (including sheet month/year for filtering by sheet/month)
-//   const rowsToInsert = parseResult.rows.map((row) => ({
-//     upload_id: upload.id,
-//     customer_name: row.customer_name,
-//     product_spec: row.product_spec,
-//     quantity: row.quantity,
-//     amount_sales: row.amount_sales,
-//     freight_cost: row.freight_cost,
-//     net_sales: row.net_sales,
-//     cogs: row.cogs,
-//     gross_margin_value: row.gross_margin_value,
-//     gross_margin_percent: row.gross_margin_percent,
-//     status: row.status,
-//     sheet_month: row.sheet_month || null,
-//     sheet_year: row.sheet_year || null,
-//   }))
- 
-//   const { error: rowsError } = await supabase
-//     .schema("public")
-//     .from("gross_profit_rows")
-//     .insert(rowsToInsert)
-
-//   if (rowsError) {
-//     return { error: `Failed to insert rows: ${rowsError.message}` }
-//   }
-
-//   // Insert into sales_performance table (AI dataset)
-//   const { insertedCount, errors: insertErrors } = await insertSalesPerformanceData(
-//     parseResult.rows,
-//     user.id
-//   )
-
-//   if (insertErrors.length > 0) {
-//     console.warn("Warning: Failed to insert some sales_performance data:", insertErrors)
-//   }
-
-//   redirect(`/dashboard/uploads/${upload.id}`)
-// }
 
 export async function deleteFailedUploadAction(uploadId: string) {
   const supabase = await createClient()

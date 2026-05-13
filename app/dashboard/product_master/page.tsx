@@ -135,6 +135,7 @@ async function handleUpdate(id: string) {
     const result = await res.json()
     if (!res.ok) { setError(result.error || "Failed to update Product"); return }
 
+    setSuccess("Product updated successfully!")
     setEditingId(null)
     await fetchMappings()
   } catch {
@@ -189,6 +190,8 @@ async function handleUpdate(id: string) {
     try {
       const res = await fetch(`/api/product-master?id=${id}`, { method: "DELETE" })
       if (!res.ok) { setError("Failed to delete product"); return }
+      
+      setSuccess("Product deleted successfully!")
       setMappings(prev => prev.filter(m => m.id !== id))
     } catch {
       setError("Failed to delete product")
